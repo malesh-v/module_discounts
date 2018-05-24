@@ -1,0 +1,41 @@
+<?php
+$actions = $this->getAllActions($this->getRequest()->getParam('id'));
+$viewUrl = Mage::getBaseUrl().'malesh_action/index/view';
+?>
+
+<div class="page-title">
+    <h1><?php echo $this->__('Product in actions') ?></h1>
+</div>
+
+<table class="data-table" id="table_act">
+    <col width="1" />
+    <thead>
+    <tr>
+        <th><?php echo $this->__('Image') ?></th>
+        <th><?php echo $this->__('Name') ?></th>
+        <th><?php echo $this->__('Description') ?></th>
+        <th><span class="nobr"><?php echo $this->__('Start date') ?></span></th>
+        <th><span class="nobr"><?php echo $this->__('End date') ?></span></th>
+        <th><span class="nobr"><?php echo $this->__('Link') ?></span></th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <?php foreach ($actions as $_obj): ?>
+        <tr>
+            <td><span class="nobr"><a href = "<?php echo $viewUrl. '?' ?>id=<?php echo $_obj->getId();?>"><?php echo
+                            '<img src="'. Mage::helper('mlaction')->getIssetImage($_obj->getImage(), 200) .'"/>';?> </a>
+                </span>
+            </td>
+            <td><span class="nobr"><?php echo $_obj->getName(); ?></span></td>
+            <td><?php echo $_obj->getData('short_description') ?></td>
+            <td><?php echo Mage::helper('mlaction')->convertFromGMT($_obj->getStart_datetime()) ?></td>
+                <?php if ($_obj->getEnd_datetime()){
+                    echo '<td>'. Mage::helper('mlaction')->convertFromGMT($_obj->getEnd_datetime()) . '</td>';
+                } else echo
+            '<td></td>'?>
+             <td><a href = "<?php echo $viewUrl. '?' ?>id=<?php echo $_obj->getId();?>">See More</a></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

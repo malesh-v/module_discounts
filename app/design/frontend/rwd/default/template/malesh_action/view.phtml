@@ -1,0 +1,44 @@
+<?php
+$_productCollection = $this->getProductsCollection($this->getProdInAction());
+$actionModel = $this->getActionModel();
+?>
+
+<div class="product-img-box" style="max-width: 330px; float:left;">
+    <img width="300" height="300"
+         src="<?php echo Mage::helper('mlaction')->getIssetImage($actionModel->getImage(), 300) ?>"/>
+</div>
+<div class="product-shop" style="text-align: justify;">
+    <h1 class="product-name"><?php echo $actionModel->getName(); ?></h1>
+    <p><?php echo 'Start Action: ' . Mage::helper('mlaction')->convertFromGMT($actionModel->getStart_datetime()); ?></p>
+    <p><?php if($actionModel->getEnd_datetime()){
+            echo 'End Action: ' . Mage::helper('mlaction')->convertFromGMT($actionModel->getEnd_datetime())
+            ;};?></p></br>
+    <p><?php echo $actionModel->getDescription(); ?></p>
+</div>
+
+
+<?php // Grid?>
+<?php $_collectionSize = $_productCollection->count() ?>
+<?php $_columnCount = $this->getColumnCount(); ?>
+<ul class="products-grid products-grid--max-<?php echo $_columnCount; ?>-col">
+    <?php foreach ($_productCollection as $_product): ?>
+        <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+                <?php $_imgSize = 210; ?>
+                <img id="product-collection-image-<?php echo $_product->getId(); ?>"
+                     src="<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize($_imgSize); ?>"
+                     alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+            </a>
+            <div class="product-info">
+                <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>"
+                                            title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
+                        <?php echo $this->helper('catalog/output')->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
+                <?php echo $this->getPriceHtml($_product, true) ?>
+                <?php if($_product->getRatingSummary()): ?>
+                    <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+                <?php endif; ?>
+            </div>
+        </li>
+    <?php endforeach ?>
+</ul>
+</div>
